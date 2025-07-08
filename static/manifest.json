@@ -1,0 +1,15 @@
+{
+  "name": "Ride Recorder",
+  "short_name": "Recorder",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#0e5b7d",
+  "icons": [
+    {
+      "src": "/static/bike_icon.png",
+      "sizes": "570x570",
+      "type": "image/png"
+    }
+  ]
+}

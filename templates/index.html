@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Ride Recorder</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+    <style>
+        /* Text colors for states */
+        .good-text {
+            color: #095d35;
+        }
+        .bad-text {
+            color: #ac5034;
+        }
+
+        /* Toggle button custom blue */
+        .toggle-btn {
+            background-color: #3f85a3;
+            color: white;
+            border: none;
+        }
+        .toggle-btn:hover {
+            background-color: #084662;
+            color: white;
+        }
+
+        /* Start Ride button green */
+        .start-btn {
+            background-color: #81b18b;
+            color: white;
+            border: none;
+        }
+        .start-btn:hover {
+            background-color: #095d35;
+            color: white;
+        }
+
+        /* End Ride button red */
+        .end-btn {
+            background-color: #ac5034;
+            color: white;
+            border: none;
+        }
+        .end-btn:hover {
+            background-color: #89351b;
+            color: white;
+        }
+
+        /* Title text color */
+        h1 {
+            color: black;
+        }
+    </style>
+
+    <script>
+        // Initial state is Good
+        let state = "Good";
+        // Array to store timestamps and states
+        let logs = [];
+        // Whether ride has started
+        let started = false;
+
+        // Function to start the ride
+        function startRide() {
+            // Get initial selected state
+            state = document.getElementById("initialState").value;
+
+            // Record initial state and time
+            const now = new Date();
+            const timeStr = now.toTimeString().split(" ")[0];
+            logs.push(`${timeStr} ${state}`);
+
+            // Update display text and color
+            const stateElem = document.getElementById("currentState");
+            stateElem.innerText = state;
+            stateElem.className = (state === "Good") ? "good-text" : "bad-text";
+
+            // Enable toggle and end buttons, disable start and selector
+            document.getElementById("toggleBtn").disabled = false;
+            document.getElementById("endBtn").disabled = false;
+            document.getElementById("startBtn").disabled = true;
+            document.getElementById("initialState").disabled = true;
+
+            started = true;
+        }
+
+        // Function to toggle state
+        function toggleState() {
+            if (!started) return;
+
+            const now = new Date();
+            const timeStr = now.toTimeString().split(" ")[0];
+            logs.push(`${timeStr} ${state}`);
+
+            // Switch state
+            state = (state === "Good") ? "Bad" : "Good";
+
+            // Update display
+            const stateElem = document.getElementById("currentState");
+            stateElem.innerText = state;
+            stateElem.className = (state === "Good") ? "good-text" : "bad-text";
+        }
+
+        // Function to end ride and download log
+        function downloadLog() {
+            if (!started) return;
+
+            const now = new Date();
+            const timeStr = now.toTimeString().split(" ")[0];
+            // Add final line to logs
+            logs.push(`${timeStr} ${state}`);
+
+            // Create file (Blob object containing text)
+            const blob = new Blob([logs.join("\n")], { type: "text/plain" });
+
+            // Temporary URL pointing to Blob
+            const url = URL.createObjectURL(blob);
+
+            // Creates anchor element
+            const link = document.createElement("a");
+            // Sets href to blob URL
+            link.href = url;
+            //Set file name of download
+            link.download = "labels.txt";
+
+            // Adds link (a) temporarily to page
+            document.body.appendChild(link);
+            // Simulates clock on link
+            link.click();
+            // Removes a from page
+            document.body.removeChild(link);
+            // Delete blob URL to free space
+            URL.revokeObjectURL(url);
+
+            // Reset for next ride
+            logs = [];
+            started = false;
+
+            // Disable buttons, reset display
+            document.getElementById("toggleBtn").disabled = true;
+            document.getElementById("endBtn").disabled = true;
+            document.getElementById("startBtn").disabled = false;
+            document.getElementById("initialState").disabled = false;
+
+            document.getElementById("currentState").innerText = "-";
+            document.getElementById("currentState").className = "";
+        }
+    </script>
+</head>
+
+<body class="container py-4">
+    <h1 class="mb-4">Ride Segment Recorder</h1>
+
+    <!-- Dropdown to select initial state -->
+    <div class="form-group">
+        <label for="initialState">Select initial state:</label>
+        <select id="initialState" class="form-control w-25">
+            <option value="Good">Good</option>
+            <option value="Bad">Bad</option>
+        </select>
+    </div>
+
+    <!-- Start Ride button -->
+    <button id="startBtn" class="btn start-btn mb-3" onclick="startRide()">Start Ride</button>
+
+    <!-- Display current state -->
+    <p>Current State: <strong id="currentState">-</strong></p>
+
+    <!-- Toggle and End buttons -->
+    <button id="toggleBtn" class="btn toggle-btn mr-2" onclick="toggleState()" disabled>Toggle Good/Bad</button>
+    <button id="endBtn" class="btn end-btn" onclick="downloadLog()" disabled>End Ride & Download labels.txt</button>
+
+
+
+    <hr>
+
+<h3>How it works</h3>
+<p>
+    Start by selecting whether your initial section is "Good" or "Bad", then click "Start Ride" to begin recording your segment labels.
+    Use the "Toggle Good/Bad" button whenever the road or trail quality changes. When you're finished, click
+    "End Ride & Download labels.txt" to save your segment log file.
+</p>
+<p>
+    You do <strong>not</strong> need to start this app at the exact moment you start recording your GPX file. This app uses time
+    of day, so you can start it any time during your ride. Later, upload your GPX file and labels file on the "Process GPX" page
+    to generate separate GPX files for good and bad segments.
+</p>
+
+    <hr>
+
+    <!-- Link to processing page -->
+    <p>After your ride, process your GPX file:</p>
+    <a href="/process" class="btn btn-outline-secondary">Go to Process GPX Page</a>
+</body>
+</html>

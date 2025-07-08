@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Process GPX File</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+    <style>
+        /* Upload and Process button colours */
+        .process-btn {
+            background-color: #3f85a3;
+            color: white;
+            border: none;
+        }
+        .process-btn:hover {
+            background-color: #084662;
+            color: white;
+        }
+    </style>
+</head>
+
+<body class="container py-4">
+    <h1 class="mb-4">Process GPX File</h1>
+
+    <!-- If processing is done, show download links -->
+    {% if done %}
+    {% if warnings %}
+        <div class="alert alert-warning">
+            <ul>
+                {% for warning in warnings %}
+                    <li>{{ warning }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+
+    <div class="alert alert-success">
+        Processing complete! Download your new files below.
+    </div>
+    <ul>
+        <li><a href="/good_segments_multi.gpx" class="btn btn-success mb-2" download>Download Good Segments GPX</a></li>
+        <li><a href="/bad_segments_multi.gpx" class="btn btn-danger" download>Download Bad Segments GPX</a></li>
+    </ul>
+    <a href="/process" class="btn btn-outline-primary mt-3">Process another file</a>
+
+    {% else %}
+        <!-- Upload form before processing -->
+        <form method="post" enctype="multipart/form-data">
+            <div class="form-group">
+                <label>Select your GPX file:</label>
+                <input type="file" name="gpx_file" class="form-control-file" required>
+            </div>
+            <div class="form-group">
+                <label>Select your labels.txt file:</label>
+                <input type="file" name="label_file" class="form-control-file" required>
+            </div>
+            <button type="submit" class="btn process-btn">Upload & Process</button>
+        </form>
+    {% endif %}
+
+    <hr>
+    <!-- Send back to come page -->
+    <a href="/" class="btn btn-outline-secondary">Back to Home</a>
+</body>
+</html>
