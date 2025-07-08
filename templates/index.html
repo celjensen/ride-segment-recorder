@@ -2,6 +2,9 @@
 <html>
 <head>
     <title>Ride Recorder</title>
+    <!-- Meta tag for mobile responsiveness -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 
@@ -121,12 +124,12 @@
             const link = document.createElement("a");
             // Sets href to blob URL
             link.href = url;
-            //Set file name of download
+            // Set file name of download
             link.download = "labels.txt";
 
             // Adds link (a) temporarily to page
             document.body.appendChild(link);
-            // Simulates clock on link
+            // Simulates click on link
             link.click();
             // Removes a from page
             document.body.removeChild(link);
@@ -149,13 +152,13 @@
     </script>
 </head>
 
-<body class="container py-4">
+<body class="container py-4 px-2">
     <h1 class="mb-4">Ride Segment Recorder</h1>
 
     <!-- Dropdown to select initial state -->
     <div class="form-group">
         <label for="initialState">Select initial state:</label>
-        <select id="initialState" class="form-control w-25">
+        <select id="initialState" class="form-control" style="max-width: 300px;">
             <option value="Good">Good</option>
             <option value="Bad">Bad</option>
         </select>
@@ -171,21 +174,19 @@
     <button id="toggleBtn" class="btn toggle-btn mr-2" onclick="toggleState()" disabled>Toggle Good/Bad</button>
     <button id="endBtn" class="btn end-btn" onclick="downloadLog()" disabled>End Ride & Download labels.txt</button>
 
-
-
     <hr>
 
-<h3>How it works</h3>
-<p>
-    Start by selecting whether your initial section is "Good" or "Bad", then click "Start Ride" to begin recording your segment labels.
-    Use the "Toggle Good/Bad" button whenever the road or trail quality changes. When you're finished, click
-    "End Ride & Download labels.txt" to save your segment log file.
-</p>
-<p>
-    You do <strong>not</strong> need to start this app at the exact moment you start recording your GPX file. This app uses time
-    of day, so you can start it any time during your ride. Later, upload your GPX file and labels file on the "Process GPX" page
-    to generate separate GPX files for good and bad segments.
-</p>
+    <h3>How it works</h3>
+    <p>
+        Start by selecting whether your initial section is "Good" or "Bad", then click "Start Ride" to begin recording your segment labels.
+        Use the "Toggle Good/Bad" button whenever the road or trail quality changes. When you're finished, click
+        "End Ride & Download labels.txt" to save your segment log file.
+    </p>
+    <p>
+        You do <strong>not</strong> need to start this app at the exact moment you start recording your GPX file. This app uses time
+        of day, so you can start it any time during your ride. Later, upload your GPX file and labels file on the "Process GPX" page
+        to generate separate GPX files for good and bad segments.
+    </p>
 
     <hr>
 
