@@ -27,7 +27,7 @@
         /* Custom style for Back to Home button */
         .back-home-btn {
             border: 1px solid #4d838f;
-            color: #7b9297;
+            color: #4d838f;
             background-color: transparent;
         }
 
@@ -70,18 +70,24 @@
 
         /* Custom color for warning box */
         .custom-warning {
-            background-color: #fffbc9;
+            background-color: #fcfce8;
             color: #9f9d7c;
             border: none;
         }
 
-/* Custom color for success box */
+        /* Custom color for success box */
         .custom-success {
-            background-color: #d9ffc6;
+            background-color: #effce8;
             color: #889f7c;
             border: none;
         }
 
+        /* Custom color for error box */
+        .custom-error {
+            background-color: #fde8e8;
+            color: #a97c7c;
+            border: none;
+        }
 
     </style>
 </head>
@@ -109,6 +115,13 @@
     <a href="/process" class="btn process-another-btn mt-3">Process another file</a>
 
     {% else %}
+        <!-- Show error box if there is an error -->
+        {% if error %}
+            <div class="alert custom-error">
+                {{ error }}
+            </div>
+        {% endif %}
+
         <!-- Upload form before processing -->
         <form method="post" enctype="multipart/form-data">
             <div class="form-group">

@@ -24,38 +24,58 @@ def index():
 @app.route("/process", methods=["GET", "POST"])
 def process():
     if request.method == "POST":
-        gpx_file = request.files["gpx_file"]
-        label_file = request.files["label_file"]
+        try:
+            # Check if files are present
+            if "gpx_file" not in request.files or "label_file" not in request.files:
+                raise ValueError("Both a GPX file and a labels file must be uploaded.")
 
-        gpx_path = "uploaded_track.gpx"
-        label_path = "uploaded_labels.txt"
+            gpx_file = request.files["gpx_file"]
+            label_file = request.files["label_file"]
 
-        # Save uploaded files
-        gpx_file.save(gpx_path)
-        label_file.save(label_path)
+            # Check if filenames are empty
+            if gpx_file.filename == "" or label_file.filename == "":
+                raise ValueError("One or both files were not selected. Please upload both files.")
 
-        # Process with your helper functions
-        labels = parse_labels(label_path)
-        gpx = load_gpx(gpx_path)
-        tagged_points = tag_points(gpx, labels)
+            # Check file extensions
+            if not gpx_file.filename.lower().endswith(".gpx"):
+                raise ValueError("The first file must be a GPX file (.gpx extension).")
 
-        # Group segments
-        good_segments = group_segments(tagged_points, "Good")
-        bad_segments = group_segments(tagged_points, "Bad")
+            if not label_file.filename.lower().endswith(".txt"):
+                raise ValueError("The second file must be a text file (.txt extension).")
 
-        # Create new GPX files
-        create_gpx_from_segments(good_segments, "good_segments_multi.gpx", track_name="Good Segments")
-        create_gpx_from_segments(bad_segments, "bad_segments_multi.gpx", track_name="Bad Segments")
+            gpx_path = "uploaded_track.gpx"
+            label_path = "uploaded_labels.txt"
 
-        # Add warnings
-        warnings = []
-        if not good_segments:
-            warnings.append("No good segments found. The Good GPX file will be empty.")
-        if not bad_segments:
-            warnings.append("No bad segments found. The Bad GPX file will be empty.")
+            # Save uploaded files
+            gpx_file.save(gpx_path)
+            label_file.save(label_path)
 
-        # Show download links and warnings
-        return render_template("process.html", done=True, warnings=warnings)
+            # Process with your helper functions
+            labels = parse_labels(label_path)
+            gpx = load_gpx(gpx_path)
+            tagged_points = tag_points(gpx, labels)
+
+            # Group segments
+            good_segments = group_segments(tagged_points, "Good")
+            bad_segments = group_segments(tagged_points, "Bad")
+
+            # Create new GPX files
+            create_gpx_from_segments(good_segments, "good_segments_multi.gpx", track_name="Good Segments")
+            create_gpx_from_segments(bad_segments, "bad_segments_multi.gpx", track_name="Bad Segments")
+
+            # Add warnings
+            warnings = []
+            if not good_segments:
+                warnings.append("No good segments found. The Good GPX file will be empty.")
+            if not bad_segments:
+                warnings.append("No bad segments found. The Bad GPX file will be empty.")
+
+            # Show download links and warnings
+            return render_template("process.html", done=True, warnings=warnings)
+
+        except Exception as e:
+            # If any error occurs, show error message on page
+            return render_template("process.html", done=False, error=str(e))
 
     # If GET, show form
     return render_template("process.html", done=False)
