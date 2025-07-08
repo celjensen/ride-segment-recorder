@@ -7,7 +7,7 @@
 
     <!-- Links bike icon -->
     <link rel="icon" href="/static/bike_icon.png" type="image/png">
-<link rel="apple-touch-icon" href="/static/bike_icon.png">
+    <link rel="apple-touch-icon" href="/static/bike_icon.png">
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
@@ -15,42 +15,42 @@
     <style>
         /* Text colors for states */
         .good-text {
-            color: #095d35;
+            color: #5e6b58;
         }
         .bad-text {
-            color: #ac5034;
+            color: #6b5b58;
         }
 
         /* Toggle button custom blue */
         .toggle-btn {
-            background-color: #3f85a3;
+            background-color: #7b9297;
             color: white;
             border: none;
         }
         .toggle-btn:hover {
-            background-color: #084662;
+            background-color: #58686b;
             color: white;
         }
 
         /* Start Ride button green */
         .start-btn {
-            background-color: #81b18b;
+            background-color: #84977b;
             color: white;
             border: none;
         }
         .start-btn:hover {
-            background-color: #095d35;
+            background-color: #5e6b58;
             color: white;
         }
 
         /* End Ride button red */
         .end-btn {
-            background-color: #ac5034;
+            background-color: #977f7b;
             color: white;
             border: none;
         }
         .end-btn:hover {
-            background-color: #89351b;
+            background-color: #6b5b58;
             color: white;
         }
 
@@ -60,13 +60,13 @@
         }
 
         /* Extra height for toggle button on small screens */
-@media (max-width: 576px) {
-    .toggle-btn {
-        padding-top: 20px;
-        padding-bottom: 20px;
-        font-size: 1.2rem;
-    }
-}
+        @media (max-width: 576px) {
+            .toggle-btn {
+                padding-top: 20px;
+                padding-bottom: 20px;
+                font-size: 1.2rem;
+            }
+        }
 
     </style>
 
@@ -78,6 +78,37 @@
         // Whether ride has started
         let started = false;
 
+        // Function to save state to local storage
+        function saveState() {
+            localStorage.setItem("rideLogs", JSON.stringify(logs));
+            localStorage.setItem("rideState", state);
+            localStorage.setItem("rideStarted", started ? "true" : "false");
+        }
+
+        // Function to restore state on page load
+        window.onload = function() {
+            const savedLogs = localStorage.getItem("rideLogs");
+            const savedState = localStorage.getItem("rideState");
+            const savedStarted = localStorage.getItem("rideStarted");
+
+            if (savedLogs && savedState && savedStarted === "true") {
+                logs = JSON.parse(savedLogs);
+                state = savedState;
+                started = true;
+
+                // Update display text and color
+                const stateElem = document.getElementById("currentState");
+                stateElem.innerText = state;
+                stateElem.className = (state === "Good") ? "good-text" : "bad-text";
+
+                // Enable toggle and end buttons, disable start and selector
+                document.getElementById("toggleBtn").disabled = false;
+                document.getElementById("endBtn").disabled = false;
+                document.getElementById("startBtn").disabled = true;
+                document.getElementById("initialState").disabled = true;
+            }
+        };
+
         // Function to start the ride
         function startRide() {
             // Get initial selected state
@@ -87,7 +118,6 @@
             const now = new Date();
             const utcTimeStr = now.toISOString().split("T")[1].split(".")[0];
             logs.push(`${utcTimeStr} ${state}`);
-
 
             // Update display text and color
             const stateElem = document.getElementById("currentState");
@@ -101,6 +131,7 @@
             document.getElementById("initialState").disabled = true;
 
             started = true;
+            saveState();
         }
 
         // Function to toggle state
@@ -108,8 +139,8 @@
             if (!started) return;
 
             const now = new Date();
-            const timeStr = now.toTimeString().split(" ")[0];
-            logs.push(`${timeStr} ${state}`);
+            const utcTimeStr = now.toISOString().split("T")[1].split(".")[0];
+            logs.push(`${utcTimeStr} ${state}`);
 
             // Switch state
             state = (state === "Good") ? "Bad" : "Good";
@@ -118,6 +149,8 @@
             const stateElem = document.getElementById("currentState");
             stateElem.innerText = state;
             stateElem.className = (state === "Good") ? "good-text" : "bad-text";
+
+            saveState();
         }
 
         // Function to end ride and download log
@@ -125,9 +158,9 @@
             if (!started) return;
 
             const now = new Date();
-            const timeStr = now.toTimeString().split(" ")[0];
+            const utcTimeStr = now.toISOString().split("T")[1].split(".")[0];
             // Add final line to logs
-            logs.push(`${timeStr} ${state}`);
+            logs.push(`${utcTimeStr} ${state}`);
 
             // Create file (Blob object containing text)
             const blob = new Blob([logs.join("\n")], { type: "text/plain" });
@@ -163,6 +196,11 @@
 
             document.getElementById("currentState").innerText = "-";
             document.getElementById("currentState").className = "";
+
+            // Clear local storage
+            localStorage.removeItem("rideLogs");
+            localStorage.removeItem("rideState");
+            localStorage.removeItem("rideStarted");
         }
     </script>
 </head>
@@ -186,9 +224,8 @@
     <p>Current State: <strong id="currentState">-</strong></p>
 
     <!-- Toggle and End buttons -->
-<button id="toggleBtn" class="btn toggle-btn mb-2 btn-block" onclick="toggleState()" disabled>Toggle Good/Bad</button>
-<button id="endBtn" class="btn end-btn mb-2 btn-block" onclick="downloadLog()" disabled>End Ride & Download labels.txt</button>
-
+    <button id="toggleBtn" class="btn toggle-btn mb-2 btn-block" onclick="toggleState()" disabled>Toggle Good/Bad</button>
+    <button id="endBtn" class="btn end-btn mb-2 btn-block" onclick="downloadLog()" disabled>End Ride & Download labels.txt</button>
 
     <hr>
 
