@@ -15,46 +15,73 @@
     <style>
         /* Upload and Process button colours */
         .process-btn {
-            background-color: #7b9297;
+            background-color: #4d838f;
             color: white;
             border: none;
         }
         .process-btn:hover {
-            background-color: #58686b;
+            background-color: #305259;
+            color: white;
+        }
+
+        /* Custom style for Back to Home button */
+        .back-home-btn {
+            border: 1px solid #4d838f;
+            color: #7b9297;
+            background-color: transparent;
+        }
+
+        .back-home-btn:hover {
+            background-color: #305259;
             color: white;
         }
 
         /* Custom colors for download buttons */
         .good-download-btn {
-            background-color: #84977b;
+            background-color: #628f4d;
             color: white;
             border: none;
         }
         .good-download-btn:hover {
-            background-color: #5e6b58;
+            background-color: #3d5930;
             color: white;
         }
 
         .bad-download-btn {
-            background-color: #977f7b;
+            background-color: #8f594d;
             color: white;
             border: none;
         }
         .bad-download-btn:hover {
-            background-color: #6b5b58;
+            background-color: #593830;
             color: white;
         }
 
         /* Custom blue for "Process another file" button */
         .process-another-btn {
-    background-color: #7b9297;
-    color: white;
-    border: none;
-}
-.process-another-btn:hover {
-    background-color: #58686b;
-    color: white;
-}
+            background-color: #4d838f;
+            color: white;
+            border: none;
+        }
+        .process-another-btn:hover {
+            background-color: #305259;
+            color: white;
+        }
+
+        /* Custom color for warning box */
+        .custom-warning {
+            background-color: #fffbc9;
+            color: #9f9d7c;
+            border: none;
+        }
+
+/* Custom color for success box */
+        .custom-success {
+            background-color: #d9ffc6;
+            color: #889f7c;
+            border: none;
+        }
+
 
     </style>
 </head>
@@ -65,14 +92,14 @@
     <!-- If processing is done, show download links -->
     {% if done %}
     {% if warnings %}
-        <div class="alert alert-warning">
+        <div class="alert custom-warning">
             {% for warning in warnings %}
                 <div>{{ warning }}</div>
             {% endfor %}
         </div>
     {% endif %}
 
-    <div class="alert alert-success">
+    <div class="alert custom-success">
         Processing complete! Download your new files below.
     </div>
     <div class="mb-2">
@@ -98,6 +125,6 @@
 
     <hr>
     <!-- Send back to come page -->
-    <a href="/" class="btn btn-outline-secondary">Back to Home</a>
+    <a href="/" class="btn back-home-btn">Back to Home</a>
 </body>
 </html>
