@@ -44,6 +44,18 @@
             background-color: #89351b;
             color: white;
         }
+
+        /* Custom blue for "Process another file" button */
+        .process-another-btn {
+    background-color: #3f85a3;
+    color: white;
+    border: none;
+}
+.process-another-btn:hover {
+    background-color: #084662;
+    color: white;
+}
+
     </style>
 </head>
 
@@ -67,7 +79,7 @@
         <a href="/good_segments_multi.gpx" class="btn good-download-btn btn-block mb-2" download>Download Good Segments GPX</a>
         <a href="/bad_segments_multi.gpx" class="btn bad-download-btn btn-block" download>Download Bad Segments GPX</a>
     </div>
-    <a href="/process" class="btn btn-outline-primary mt-3">Process another file</a>
+    <a href="/process" class="btn process-another-btn mt-3">Process another file</a>
 
     {% else %}
         <!-- Upload form before processing -->

@@ -83,10 +83,11 @@
             // Get initial selected state
             state = document.getElementById("initialState").value;
 
-            // Record initial state and time
+            // Record initial state and time in UTC (Coordinated Universal Time)
             const now = new Date();
-            const timeStr = now.toTimeString().split(" ")[0];
-            logs.push(`${timeStr} ${state}`);
+            const utcTimeStr = now.toISOString().split("T")[1].split(".")[0];
+            logs.push(`${utcTimeStr} ${state}`);
+
 
             // Update display text and color
             const stateElem = document.getElementById("currentState");
